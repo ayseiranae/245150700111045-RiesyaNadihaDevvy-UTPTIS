@@ -1,0 +1,706 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Items API",
+        "description": "API documentation for managing Items. This API provides CRUD operations for pastry shop items stored in a JSON file.",
+        "contact": {
+            "name": "Riesya Nadiha Devvy",
+            "email": "riesyanadiha@student.ub.ac.id"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://127.0.0.1:8000",
+            "description": "Local Development Server"
+        }
+    ],
+    "paths": {
+        "/api/items": {
+            "get": {
+                "tags": [
+                    "Items"
+                ],
+                "summary": "Get all items",
+                "description": "Retrieve a list of all items. Supports filtering by category and searching by name.",
+                "operationId": "getItems",
+                "parameters": [
+                    {
+                        "name": "category",
+                        "in": "query",
+                        "description": "Filter items by category",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "Pastry"
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Search items by name (case-insensitive)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "Croissant"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Items retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Items retrieved successfully"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 2
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "Pain au Chocolat"
+                                                    },
+                                                    "category": {
+                                                        "type": "string",
+                                                        "example": "Pastry"
+                                                    },
+                                                    "price": {
+                                                        "type": "number",
+                                                        "example": 20000
+                                                    },
+                                                    "stock": {
+                                                        "type": "integer",
+                                                        "example": 20
+                                                    },
+                                                    "description": {
+                                                        "type": "string",
+                                                        "example": "Pastry filled with premium chocolate"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Items"
+                ],
+                "summary": "Create a new item",
+                "description": "Create a new item with the provided data. All fields are required.",
+                "operationId": "createItem",
+                "requestBody": {
+                    "description": "Item data to create",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "category",
+                                    "price",
+                                    "stock",
+                                    "description"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Almond Croissant"
+                                    },
+                                    "category": {
+                                        "type": "string",
+                                        "example": "Pastry"
+                                    },
+                                    "price": {
+                                        "description": "Minimum value: 1000",
+                                        "type": "number",
+                                        "example": 25000
+                                    },
+                                    "stock": {
+                                        "description": "Minimum value: 0",
+                                        "type": "integer",
+                                        "example": 12
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Croissant filled with almond cream and topped with sliced almonds"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Item created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Item created successfully"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 7
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Almond Croissant"
+                                                },
+                                                "category": {
+                                                    "type": "string",
+                                                    "example": "Pastry"
+                                                },
+                                                "price": {
+                                                    "type": "number",
+                                                    "example": 25000
+                                                },
+                                                "stock": {
+                                                    "type": "integer",
+                                                    "example": 12
+                                                },
+                                                "description": {
+                                                    "type": "string",
+                                                    "example": "Croissant filled with almond cream and topped with sliced almonds"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The name field is required."
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "name": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "The name field is required."
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/items/{id}": {
+            "get": {
+                "tags": [
+                    "Items"
+                ],
+                "summary": "Get item by ID",
+                "description": "Retrieve a single item by its ID.",
+                "operationId": "getItemById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the item to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 2
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Item found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Item found"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 2
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Pain au Chocolat"
+                                                },
+                                                "category": {
+                                                    "type": "string",
+                                                    "example": "Pastry"
+                                                },
+                                                "price": {
+                                                    "type": "number",
+                                                    "example": 20000
+                                                },
+                                                "stock": {
+                                                    "type": "integer",
+                                                    "example": 20
+                                                },
+                                                "description": {
+                                                    "type": "string",
+                                                    "example": "Pastry filled with premium chocolate"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Item not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Item with ID 99 not found"
+                                        },
+                                        "data": {
+                                            "type": "string",
+                                            "example": null,
+                                            "nullable": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Items"
+                ],
+                "summary": "Update an item (full update)",
+                "description": "Replace all fields of an existing item. All fields are required.",
+                "operationId": "updateItem",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the item to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 4
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Complete item data for update",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "category",
+                                    "price",
+                                    "stock",
+                                    "description"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Cinnamon Roll Special"
+                                    },
+                                    "category": {
+                                        "type": "string",
+                                        "example": "Sweet Bread"
+                                    },
+                                    "price": {
+                                        "description": "Minimum value: 1000",
+                                        "type": "number",
+                                        "example": 22000
+                                    },
+                                    "stock": {
+                                        "description": "Minimum value: 0",
+                                        "type": "integer",
+                                        "example": 10
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Special cinnamon roll with extra cream cheese frosting"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Item updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Item updated successfully"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 4
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Cinnamon Roll Special"
+                                                },
+                                                "category": {
+                                                    "type": "string",
+                                                    "example": "Sweet Bread"
+                                                },
+                                                "price": {
+                                                    "type": "number",
+                                                    "example": 22000
+                                                },
+                                                "stock": {
+                                                    "type": "integer",
+                                                    "example": 10
+                                                },
+                                                "description": {
+                                                    "type": "string",
+                                                    "example": "Special cinnamon roll with extra cream cheese frosting"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Item not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Item with ID 99 not found"
+                                        },
+                                        "data": {
+                                            "type": "string",
+                                            "example": null,
+                                            "nullable": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The name field is required."
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "name": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "The name field is required."
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Items"
+                ],
+                "summary": "Delete an item",
+                "description": "Delete an item by its ID.",
+                "operationId": "deleteItem",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the item to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 6
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Item deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Item deleted successfully"
+                                        },
+                                        "data": {
+                                            "type": "string",
+                                            "example": null,
+                                            "nullable": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Item not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Item with ID 99 not found"
+                                        },
+                                        "data": {
+                                            "type": "string",
+                                            "example": null,
+                                            "nullable": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "Items"
+                ],
+                "summary": "Partially update an item",
+                "description": "Update one or more fields of an existing item. Only provided fields will be updated.",
+                "operationId": "patchItem",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the item to partially update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 3
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Partial item data for update (only include fields you want to change)",
+                    "required": false,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Strawberry Danish Deluxe"
+                                    },
+                                    "category": {
+                                        "type": "string",
+                                        "example": "Pastry"
+                                    },
+                                    "price": {
+                                        "type": "number",
+                                        "example": 28000
+                                    },
+                                    "stock": {
+                                        "type": "integer",
+                                        "example": 8
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Deluxe pastry topped with fresh strawberries and vanilla custard"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Item partially updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Item partially updated"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 3
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Strawberry Danish Deluxe"
+                                                },
+                                                "category": {
+                                                    "type": "string",
+                                                    "example": "Pastry"
+                                                },
+                                                "price": {
+                                                    "type": "number",
+                                                    "example": 28000
+                                                },
+                                                "stock": {
+                                                    "type": "integer",
+                                                    "example": 8
+                                                },
+                                                "description": {
+                                                    "type": "string",
+                                                    "example": "Deluxe pastry topped with fresh strawberries and vanilla custard"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Item not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Item with ID 99 not found"
+                                        },
+                                        "data": {
+                                            "type": "string",
+                                            "example": null,
+                                            "nullable": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Items",
+            "description": "Items"
+        }
+    ]
+}
